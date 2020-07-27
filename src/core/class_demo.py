@@ -29,3 +29,4 @@ man = Man("aaa",20)
 print(man.sex)
 man.eat("香蕉")
 print(man.work.work)
+

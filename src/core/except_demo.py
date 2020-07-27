@@ -12,7 +12,11 @@ finaly:
     do soming...
 """
 try:
+    i = 10
+    if i == 0:
+        raise BaseException("i 不能等于0")
     print(1/0)
+
 except BaseException as be:
     print("error....", be)
 else:
