@@ -2,31 +2,45 @@ import pymysql
 from DBUtils.PooledDB import PooledDB
 from machinelearn.learn.mysql import DbConfig
 
-
-class DbPool():
-
-    """
-    1. mincached，最少的空闲连接数，如果空闲连接数小于这个数，pool会创建一个新的连接
-    2. maxcached，最大的空闲连接数，如果空闲连接数大于这个数，pool会关闭空闲连接
-    3. maxconnections，最大的连接数，
-    """
+"""
+    感觉下来连接池获取连接和每次创建连接时间基本一致
+"""
+class MysqlPool(object):
     def __init__(self):
-        self.pool = PooledDB(creator = pymysql, host=DbConfig.host, user=DbConfig.user, passwd=DbConfig.passwd,
-                               db=DbConfig.db, port=int(DbConfig.port),mincached=2,maxcached=2,maxconnections=2)
+        self.__pool = PooledDB(creator = pymysql, host=DbConfig.host, user=DbConfig.user, passwd=DbConfig.passwd,
+                               db=DbConfig.db, port=int(DbConfig.port))
+
+    def get_coon(self):
+        return self.__pool.connection()
 
 
-    def queryMany(self, name):
-        try:
-            sql = "select * from t_user where name = %s limit 2"
 
-            # 连接数据池
-            coon = self.pool.connection()
-            cursor = coon.cursor()
-            cursor.execute(sql, name)
-            fetchmany = cursor.fetchmany(3)
-            print(str(fetchmany))
-        except Exception as e:
-            print("多笔查询失败，参数：" + str(name), e)
+def queryMany(name):
+    try:
+        sql = "select * from t_user where name = %s"
 
-dbpool = DbPool()
-dbpool.queryMany("ukar")
+        # 连接数据池
+        coon = MysqlPool().get_coon()
+        cursor = coon.cursor()
+        cursor.execute(sql, name)
+        fetchmany = cursor.fetchmany(2)
+        print(str(fetchmany))
+    except Exception as e:
+        print("多笔查询失败，参数：" + str(name), e)
+    finally:
+        cursor.close()
+
+def insertMany(list):
+
+    sql = "insert into t_user (name, age) values (%s, %s)"
+    try:
+        coon = MysqlPool().get_coon()
+        cursor = coon.cursor()
+        cursor.executemany(sql, list)
+        coon.commit()
+        print("批量插入成功，参数：" + str(list))
+    except:
+        print("批量插入失败，参数：" + str(list))
+        coon.rollback()
+    finally:
+        coon.close()
