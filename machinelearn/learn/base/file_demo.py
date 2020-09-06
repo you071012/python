@@ -40,9 +40,9 @@ def copy_file(path, source_file, target_file):
     copy = shutil.copy2(source_file, target_file)
     print(copy)
 
-# read_file("../resource/test.txt")
+read_file("../../../docs/test.txt")
 # copy_file("D:/ukar/demo", "D:/ukar/常用命令/git.txt", "D:/ukar/demo/git.txt")
-write_file("../resource/test.txt", "a")
+# write_file("../../docs/test.txt", "a")
 
 
 
