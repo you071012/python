@@ -13,7 +13,7 @@ def insertOne(name, age):
     db = init_db()
     cursor = db.cursor()
     sql = "insert into t_user (name, age) values (%s, %s)"
-    params = (name, age)
+    params = [name, age]
     cursor.execute(sql, params)
     db.commit()
     db.close()
@@ -35,13 +35,14 @@ def insertMany(list):
     finally:
         db.close()
 
-def queryOne(id):
+def queryOne(id ,name):
     db = init_db()
     cursor = db.cursor()
-    sql = "select * from t_user where id = %s"
+    sql = "select * from t_user where id = %s and name like %s"
 
     try:
-        cursor.execute(sql, id)
+        params = [id, name] # params = (id, name) 使用元组也可以，但是不建议
+        cursor.execute(sql, params)
         fetchone = cursor.fetchone()
         print(str(fetchone))
     except Exception as e:
@@ -59,11 +60,31 @@ def queryMany(name):
         fetchmany = cursor.fetchmany(3)
         print(str(fetchmany))
     except Exception as e:
-        print("多笔查询失败，参数：" + str(name))
+        print("多笔查询失败，参数：" + str(name), e)
     finally:
         db.close()
 
-# insertOne('ukar', 18)
+def queryIn(ids, name):
+    db = init_db()
+    cursor = db.cursor()
+    sql = "select * from t_user where id in (%s)" % ','.join(['%s'] * len(ids))
+    sql = sql + " and name like %s"
+
+    params = ids
+    params.append(name)
+    try:
+        cursor.execute(sql, params)
+        fetchall = cursor.fetchall()
+        print(fetchall)
+    except Exception as e:
+        print("in查询失败", e)
+    finally:
+        db.close()
+
+# 参数传递建议用列表，而不是使用元组
+
+# insertOne('ukarAAA', 18)
 # insertMany([('ukar', 19),('ukar', 20)])
-# queryOne(1)
-# queryMany("ukar")
+# queryOne(1, 'ukar%')
+# queryMany("ukar1")
+# queryIn([1,2], 'ukar%')
