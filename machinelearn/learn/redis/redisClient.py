@@ -7,7 +7,7 @@ pool = redis.ConnectionPool(host='localhost', port=6379, password="")
 r = redis.Redis(connection_pool=pool)
 
 # r.set(name = "name", value = "ukar1", ex=10)
-key = "CUST_NO_6666000103106145"
+key = "ACCT_NO_6666000103262803_B00423216"
 val = r.get(key)
 if val != None:
     print("redis获取", str(val, encoding="utf-8"))
