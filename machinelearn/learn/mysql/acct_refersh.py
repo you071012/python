@@ -25,7 +25,7 @@ def refersh():
     productIds = ["FSBF"]
     startId = "0"
     sql = "select id,cust_id,acct_id from acct_info where biz_product_id in (%s)" % ','.join(['%s'] * len(productIds))
-    sql = sql + " and id > %s order by id asc limit 1000"
+    sql = sql + " and id > %s order by id asc limit 2000"
 
     total = 0
     try:
