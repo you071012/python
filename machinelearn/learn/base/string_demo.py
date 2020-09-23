@@ -20,7 +20,7 @@ center_str = test_str.center(20, '*')
 print(center_str)
 
 #按照指定字符去除首尾字符，不传参数代表去空格
-strip_str = test_str.strip(" ")
+strip_str = test_stracct_refersh.py
 print("字符传去除首尾空格：" , strip_str)
 
 test_split_str = "hello&world"
