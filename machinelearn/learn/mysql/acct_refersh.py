@@ -24,7 +24,7 @@ def refersh():
 
     productIds = ["FSBF"]
     startId = "0"
-    sql = "select id from acct_info where biz_product_id in (%s)" % ','.join(['%s'] * len(productIds))
+    sql = "select id,cust_id from acct_info where biz_product_id in (%s)" % ','.join(['%s'] * len(productIds))
     sql = sql + " and id > %s order by id asc limit 1000"
 
     total = 0
@@ -40,8 +40,8 @@ def refersh():
 
             upd_params = []
             for i in range(len(fetchmany)):
-                upd_params.append(fetchmany[i][0])
-            upd_sql = "update acct_info set acct_rgn_id = '01' where id in (%s)" % ','.join(['%s'] * len(upd_params))
+                upd_params.append(fetchmany[i][1])
+            upd_sql = "update acct_info set acct_rgn_id = '01' where cust_id in (%s)" % ','.join(['%s'] * len(upd_params))
 
             rds_cursor.execute(upd_sql, upd_params)
             rds_db.commit()
