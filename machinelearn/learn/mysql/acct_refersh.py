@@ -14,7 +14,8 @@ def init_polardb():
 
 
 def refersh():
-    print("执行开始时间：" + time.strftime("%Y%m%d%H%M%S", time.localtime()))
+    startTime = int(str(time.strftime("%Y%m%d%H%M%S", time.localtime())))
+
     rds_db = init_rdsdb()
     rds_cursor = rds_db.cursor()
 
@@ -24,7 +25,7 @@ def refersh():
     productIds = ["FSBF"]
     startId = "0"
     sql = "select id,cust_id,acct_id from acct_info where biz_product_id in (%s)" % ','.join(['%s'] * len(productIds))
-    sql = sql + " and id > %s order by id asc limit 10"
+    sql = sql + " and id > %s order by id asc limit 1000"
 
     total = 0
     try:
@@ -50,7 +51,8 @@ def refersh():
     finally:
         rds_db.close()
         polar_db.close()
-        print("执行结束时间：" + time.strftime("%Y%m%d%H%M%S", time.localtime()))
+        endTime = int(str(time.strftime("%Y%m%d%H%M%S", time.localtime())))
+        print("执行结束时间，耗时：" + str(endTime -startTime) + "秒")
 
 
 refersh()
