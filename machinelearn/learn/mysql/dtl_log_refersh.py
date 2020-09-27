@@ -11,16 +11,16 @@ class DtlLogRefersh():
         if len(argv) < 2:
             raise AttributeError("请传入入金分区参数")
 
-        tag = argv[1].upper()
+        self.tag = argv[1].upper()
 
         cf = configparser.ConfigParser()
         cf.read("./refersh_config.ini")
 
-        if tag == "X":
+        if self.tag == "X":
             params_key = "PARAMS-X"
-        elif tag == "Y":
+        elif self.tag == "Y":
             params_key = "PARAMS-Y"
-        elif tag == "Z":
+        elif self.tag == "Z":
             params_key = "PARAMS-Z"
         else:
             raise AttributeError("参数传递错误")
@@ -33,6 +33,7 @@ class DtlLogRefersh():
 
         self.trans_date = cf.get(params_key, "trans_date")
         self.max_id = cf.get(params_key, "max_id")
+        self.total = 0
 
     def refersh(self):
 
@@ -55,18 +56,15 @@ class DtlLogRefersh():
 
         print("开始准备执行刷分区，共计%d条trasnLog待处理" % len(transIds))
         trans_id_list = []
-        total = 0
         for transId in transIds:
             trans_id_list.append(transId[0])
             if len(trans_id_list) % 200 == 0:
                 self.do_update(trans_id_list, product_dict, rds_db, rds_cursor)
-                total = total + 200
                 trans_id_list = []
-                print("当前共执行%d条" % (total))
         if len(trans_id_list) > 0:
             self.do_update(trans_id_list, product_dict, rds_db, rds_cursor)
-            total = total + len(trans_id_list)
-            print("当前共执行%d条" % (total))
+
+        print("分区%s刷库完成，共计：%d条" % (self.tag,self.total))
         rds_db.close()
 
     def do_update(self, trans_id_list, product_dict, rds_db, rds_cursor):
@@ -80,6 +78,7 @@ class DtlLogRefersh():
             upd_dict = {}
             # 将upd_list中元素按照产品号归类
             for item in upd_list:
+                self.total = self.total + 1
                 id = item[0]
                 product_id = item[1]
                 if (not upd_dict) or (product_id not in upd_dict.keys()):
@@ -96,6 +95,7 @@ class DtlLogRefersh():
                 upd_sql = upd_sql + " and id in (%s)" % ','.join(['%s'] * len(val))
                 rds_cursor.execute(upd_sql, val)
                 rds_db.commit()
+            print("当前一批执行完毕，目前共执行：%d条" % self.total)
         except Exception as e:
             print("刷新分区号失败", e)
             rds_db.rollback()
