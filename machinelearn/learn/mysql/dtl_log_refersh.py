@@ -1,26 +1,36 @@
 # -*- coding:utf-8 -*-
 import pymysql
-import time
 import configparser
+import sys
 
 
 
 class DtlLogRefersh():
     def __init__(self):
+        argv = sys.argv
+        tag = argv[1].upper()
+
         cf = configparser.ConfigParser()
         cf.read("./refersh_config.ini")
-        trans_rds_key = "Trans-Database"
-        param_key = "Param-Config"
 
-        self.host = cf.get(trans_rds_key, "host")
-        self.user = cf.get(trans_rds_key, "user")
-        self.passwd = cf.get(trans_rds_key, "passwd")
-        self.database = cf.get(trans_rds_key, "database")
-        self.port = int(cf.get(trans_rds_key, "port"))
+        if tag == "X":
+            params_key = "PARAMS-X"
+        elif tag == "Y":
+            params_key = "PARAMS-Y"
+        elif tag == "Z":
+            params_key = "PARAMS-Z"
+        else:
+            raise AttributeError("参数传递错误")
 
-        self.trans_date = cf.get(param_key, "trans_date")
-        self.max_id = cf.get(param_key, "max_id")
-        self.count = 0
+        self.host = cf.get(params_key, "host")
+        self.user = cf.get(params_key, "user")
+        self.passwd = cf.get(params_key, "passwd")
+        self.database = cf.get(params_key, "database")
+        self.port = int(cf.get(params_key, "port"))
+
+        self.trans_date = cf.get(params_key, "trans_date")
+        self.max_id = cf.get(params_key, "max_id")
+
     def refersh(self):
 
         rds_db = pymysql.connect(host=self.host, port=self.port, user=self.user,
