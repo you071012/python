@@ -8,6 +8,9 @@ import sys
 class DtlLogRefersh():
     def __init__(self):
         argv = sys.argv
+        if len(argv) < 2:
+            raise AttributeError("请传入入金分区参数")
+
         tag = argv[1].upper()
 
         cf = configparser.ConfigParser()
