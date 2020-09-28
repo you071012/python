@@ -54,7 +54,6 @@ class DtlLogRefersh():
                         % (self.trans_date, self.max_id)
         rds_cursor.execute(trans_log_sql)
         transIds = rds_cursor.fetchall()
-
         print("开始准备执行刷分区，共计%d条trasnLog待处理" % len(transIds))
         trans_id_list = []
         for transId in transIds:
@@ -93,7 +92,7 @@ class DtlLogRefersh():
 
             for key, val in upd_dict.items():
                 upd_sql = "update trans_dtl_log set acct_rgn_id = '%s' where trans_date = '%s'" % (product_dict[key], self.trans_date)
-                upd_sql = upd_sql + " and id in (%s)" % ','.join(['%s'] * len(val))
+                upd_sql = upd_sql + " and acct_stat = 'W' and id in (%s)" % ','.join(['%s'] * len(val))
                 rds_cursor.execute(upd_sql, val)
                 rds_db.commit()
             print("当前一批执行完毕，目前共执行：%d条" % self.total)
