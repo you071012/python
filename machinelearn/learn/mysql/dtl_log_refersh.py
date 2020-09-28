@@ -64,7 +64,7 @@ class DtlLogRefersh():
         if len(trans_id_list) > 0:
             self.do_update(trans_id_list, product_dict, rds_db, rds_cursor)
 
-        print("分区%s刷库完成，共计：%d条" % (self.tag,self.total))
+        print("transDtlLog分区%s刷库完成，共计：%d条" % (self.tag,self.total))
         rds_db.close()
 
     def do_update(self, trans_id_list, product_dict, rds_db, rds_cursor):
@@ -95,7 +95,7 @@ class DtlLogRefersh():
                 upd_sql = upd_sql + " and id in (%s)" % ','.join(['%s'] * len(val))
                 rds_cursor.execute(upd_sql, val)
                 rds_db.commit()
-            print("当前一批执行完毕，目前共执行：%d条" % self.total)
+            print("当前一批执行完毕，目前共执行transDtlLog：%d条" % self.total)
         except Exception as e:
             print("刷新分区号失败", e)
             rds_db.rollback()
