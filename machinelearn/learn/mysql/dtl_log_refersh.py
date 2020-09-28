@@ -34,6 +34,7 @@ class DtlLogRefersh():
         self.trans_date = cf.get(params_key, "trans_date")
         self.max_id = cf.get(params_key, "max_id")
         self.total = 0
+        print("参数信息，分区：%s，日期：%s" %(self.tag, self.trans_date))
 
     def refersh(self):
 
