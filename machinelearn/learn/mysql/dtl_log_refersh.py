@@ -50,7 +50,7 @@ class DtlLogRefersh():
         for item in cursor_fetchall:
             product_dict[item[0]] = item[1]
 
-        trans_log_sql = "select trans_id from trans_log where trans_date = '%s' and acct_stat = 'W'  and id <= %s"\
+        trans_log_sql = "select trans_id from trans_log where trans_date = '%s' and acct_stat = 'W'  and trans_type = '1113' and id <= %s"\
                         % (self.trans_date, self.max_id)
         rds_cursor.execute(trans_log_sql)
         transIds = rds_cursor.fetchall()
