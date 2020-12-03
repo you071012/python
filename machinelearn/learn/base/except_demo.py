@@ -11,15 +11,18 @@ else:
 finaly:
     do soming...
 """
-try:
-    i = 10
-    if i == 0:
-        raise BaseException("i 不能等于0")
-    print(1/0)
+def foo(i):
+    try:
+        if i == 1:
+            # 如果 raise后面什么都不带表示抛出当前异常
+            raise BaseException("i 不能等于1")
+        print(1 / i)
 
-except BaseException as be:
-    print("error....", be)
-else:
-    print("there is no error")
-finally:
-    print("finally...")
+    except BaseException as be:
+        print("error....", be)
+    else:
+        print("there is no error")
+    finally:
+        print("finally...")
+
+foo(2)
