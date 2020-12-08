@@ -1,4 +1,4 @@
-import requests
+import requests,json
 
 def get(url, data):
     res=requests.get(url)
@@ -6,11 +6,14 @@ def get(url, data):
     print(result)
 
 # post表单提交
-def post(url, data):
+def postJson(url, data=None):
+    headers = {"Content-Type" : "application/json"}
+
     if not data:
         data = {}
-    res=requests.post(url,data=data)
+    res=requests.post(url,data=json.dumps(data), headers=headers)
     result=res.text
     print(result)
 
-post("http://localhost:9001/refresh", None)
+# postJson("http://localhost:9001/bus/bus-refresh")
+postJson("http://localhost:9001/bus/bus-refresh/config-client:**")
