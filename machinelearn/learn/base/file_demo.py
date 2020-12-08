@@ -29,21 +29,35 @@ def write_file(path, mode="w"):
 
 """
     copy文件
-    @:param path 文件对应文件夹路径
     @:param source_file 源文件
     @:param target_file copy后文件
     @:return 返回copy文件的文件路径
 """
-def copy_file(path, source_file, target_file):
-    if(os.path.exists(path) != True):
-        os.mkdir(path)
+def copy_file( source_file, target_file):
+    # if(os.path.exists(path) != True):
+    #     os.mkdir(path)
     copy = shutil.copy2(source_file, target_file)
     print(copy)
 
-read_file("../../../docs/test.txt")
-# copy_file("D:/ukar/demo", "D:/ukar/常用命令/git.txt", "D:/ukar/demo/git.txt")
-# write_file("../../docs/test.txt", "a")
 
+
+# 手撸copy文件
+def copy_file2(source_file, target_file):
+
+    with open(source_file, "rb") as fsrc:
+        with open(target_file, 'wb') as fdst:
+            while True:
+                buf = fsrc.read(1024)
+                if not buf:
+                    break
+                fdst.write(buf)
+            fdst.close()
+        fsrc.close()
+
+# read_file("../../../docs/test.txt")
+# copy_file("/Users/youjia/Desktop/file/aa.xlsx", "/Users/youjia/Desktop/bb.xlsx")
+# write_file("../../docs/test.txt", "a")
+# copy_file2("/Users/youjia/Desktop/file/汇付后台开放平台接口规范v1.0.3_20200609.xlsx", "/Users/youjia/Desktop/bb.xlsx")
 
 
 
